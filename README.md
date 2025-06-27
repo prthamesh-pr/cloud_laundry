@@ -114,7 +114,7 @@ cloud-laundry-backend
 ## Installation
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/cloud-laundry-backend.git
+   git clone https://github.com/prthamesh-pr/cloud_laundry.git
    cd cloud-laundry-backend
    ```
 
