@@ -50,11 +50,49 @@ app.use('/api/v1/schedules', scheduleRoutes);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
 
+// Root route
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: '🧺 Cloud Laundry API is running!',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      auth: '/api/v1/auth',
+      users: '/api/v1/users',
+      orders: '/api/v1/orders',
+      services: '/api/v1/services',
+      schedules: '/api/v1/schedules',
+      payments: '/api/v1/payments',
+      notifications: '/api/v1/notifications'
+    },
+    documentation: 'https://github.com/prthamesh-pr/cloud_laundry'
+  });
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Server is running'
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+// 404 handler for unmatched routes
+app.use('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found`,
+    availableEndpoints: [
+      'GET /',
+      'GET /health',
+      'POST /api/v1/auth/register',
+      'POST /api/v1/auth/login',
+      'GET /api/v1/services',
+      'GET /api/v1/orders'
+    ]
   });
 });
 

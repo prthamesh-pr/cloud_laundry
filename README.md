@@ -1,7 +1,10 @@
-# Cloud Laundry Backend - Setup & Testing Guide
+# Cloud Laundry Backend API 🧺
 
 ## Overview
-A comprehensive Node.js backend for a cloud laundry service with MongoDB, featuring JWT authentication, password hashing, input validation, and role-based access control.
+A comprehensive Node.js backend for a cloud laundry service with MongoDB Atlas, featuring JWT authentication, password hashing, input validation, and role-based access control.
+
+## 🚀 Live Demo
+**API Base URL:** `https://cloud-laundry.onrender.com`
 
 ## Quick Start
 
@@ -15,14 +18,14 @@ A comprehensive Node.js backend for a cloud laundry service with MongoDB, featur
    ```env
    NODE_ENV=development
    PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/cloud-laundry
+   MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/cloud-laundry?retryWrites=true&w=majority
    JWT_SECRET=your-super-secret-jwt-key-here-make-it-long-and-complex-2024
    JWT_EXPIRE=30d
    JWT_COOKIE_EXPIRE=30
    ```
 
 3. **Start MongoDB**
-   Make sure MongoDB is running locally or use MongoDB Atlas.
+   Make sure MongoDB is running locally or use MongoDB Atlas (recommended).
 
 4. **Seed Database (Optional)**
    ```bash
@@ -36,7 +39,15 @@ A comprehensive Node.js backend for a cloud laundry service with MongoDB, featur
 
 ## API Testing with Postman
 
-### Base URL: `http://localhost:5000`
+### Base URLs:
+- **Production:** `https://cloud-laundry.onrender.com`
+- **Development:** `http://localhost:5000`
+
+### 0. Welcome Endpoint
+```http
+GET /
+```
+Response: API information and available endpoints
 
 ### 1. Health Check
 ```http
