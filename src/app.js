@@ -68,6 +68,48 @@ app.use('/api/v1/schedules', scheduleRoutes);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
 
+// Debug route to test auth routes
+app.get('/debug/routes', (req, res) => {
+  const routes = [];
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      routes.push({
+        path: middleware.route.path,
+        methods: Object.keys(middleware.route.methods)
+      });
+    } else if (middleware.name === 'router') {
+      middleware.handle.stack.forEach((handler) => {
+        const path = middleware.regexp.source.replace('\\', '').replace('/?$', '');
+        if (handler.route) {
+          routes.push({
+            path: path + handler.route.path,
+            methods: Object.keys(handler.route.methods)
+          });
+        }
+      });
+    }
+  });
+  
+  res.json({
+    success: true,
+    message: 'Available routes',
+    routes: routes
+  });
+});
+
+// Test auth specifically
+app.get('/debug/auth', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Auth routes should be mounted at /api/v1/auth',
+    testEndpoints: [
+      'POST /api/v1/auth/login',
+      'POST /api/v1/auth/register', 
+      'GET /api/v1/auth/me'
+    ]
+  });
+});
+
 // Root route
 app.get('/', (req, res) => {
   res.status(200).json({
