@@ -1,14 +1,24 @@
 const express = require('express');
 const { protect } = require('../middleware/auth');
+const { 
+  getUserProfile, 
+  updateUserProfile, 
+  changePassword,
+  updateNotificationSettings,
+  updateAppSettings
+} = require('../controllers/userController');
 
 const router = express.Router();
 
-// Get user profile
-router.get('/profile', protect, (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'User routes - coming soon'
-  });
-});
+// User profile routes
+router.get('/profile', protect, getUserProfile);
+router.put('/profile', protect, updateUserProfile);
+
+// Password change route
+router.put('/change-password', protect, changePassword);
+
+// Settings routes
+router.put('/notification-settings', protect, updateNotificationSettings);
+router.put('/app-settings', protect, updateAppSettings);
 
 module.exports = router;

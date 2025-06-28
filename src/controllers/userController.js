@@ -61,6 +61,56 @@ exports.changePassword = async (req, res) => {
     }
 };
 
+// Update notification settings
+exports.updateNotificationSettings = async (req, res) => {
+    const { pushNotifications, emailNotifications, smsNotifications, orderUpdates, promotionalEmails } = req.body;
+
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { 
+                'notificationSettings.pushNotifications': pushNotifications,
+                'notificationSettings.emailNotifications': emailNotifications,
+                'notificationSettings.smsNotifications': smsNotifications,
+                'notificationSettings.orderUpdates': orderUpdates,
+                'notificationSettings.promotionalEmails': promotionalEmails
+            },
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Update app settings
+exports.updateAppSettings = async (req, res) => {
+    const { language, currency, darkMode } = req.body;
+
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { 
+                'appSettings.language': language,
+                'appSettings.currency': currency,
+                'appSettings.darkMode': darkMode
+            },
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 // Generate JWT token
 exports.generateToken = (user) => {
     return jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
