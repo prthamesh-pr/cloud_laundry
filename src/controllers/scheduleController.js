@@ -140,7 +140,7 @@ const updateSchedule = async (req, res) => {
     }
 };
 
-// Cancel schedule
+// Cancel schedule (update status to cancelled)
 const cancelSchedule = async (req, res) => {
     try {
         const schedule = await Schedule.findById(req.params.id);
@@ -160,11 +160,14 @@ const cancelSchedule = async (req, res) => {
             });
         }
 
-        await Schedule.findByIdAndDelete(req.params.id);
+        // Update status to cancelled instead of deleting
+        schedule.status = 'cancelled';
+        await schedule.save();
 
         res.status(200).json({
             success: true,
-            message: 'Schedule cancelled successfully'
+            message: 'Schedule cancelled successfully',
+            data: schedule
         });
     } catch (error) {
         res.status(500).json({

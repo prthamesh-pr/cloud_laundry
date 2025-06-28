@@ -28,6 +28,11 @@ const scheduleSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+    default: 'pending'
+  },
   createdAt: {
     type: Date,
     default: Date.now,
