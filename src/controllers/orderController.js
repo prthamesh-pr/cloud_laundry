@@ -212,11 +212,36 @@ const getAllOrders = async (req, res) => {
     }
 };
 
+// Get order history for current user (completed, delivered, cancelled orders)
+const getOrderHistory = async (req, res) => {
+    try {
+        const orders = await Order.find({ 
+            user: req.user.id,
+            status: { $in: ['completed', 'delivered', 'cancelled'] }
+        })
+            .populate('services.service', 'name price category')
+            .sort({ updatedAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            count: orders.length,
+            data: orders
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     createOrder,
     getUserOrders,
     getOrderById,
     updateOrderStatus,
     cancelOrder,
-    getAllOrders
+    getAllOrders,
+    getOrderHistory
 };
