@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const Service = require('./src/models/Service');
+const Service = require('./models/Service');
 
-dotenv.config();
-
-const services = [
+const defaultServices = [
   {
     name: "Wash & Fold",
     description: "Professional washing and folding service for your everyday clothes",
@@ -84,28 +81,21 @@ const services = [
   }
 ];
 
-const seedServices = async () => {
+const initializeServices = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    console.log('Connected to MongoDB');
-
-    // Clear existing services
-    await Service.deleteMany({});
-    console.log('Cleared existing services');
-
-    // Insert new services
-    await Service.insertMany(services);
-    console.log('Services seeded successfully');
-
-    process.exit(0);
+    // Check if services already exist
+    const existingServices = await Service.find();
+    
+    if (existingServices.length === 0) {
+      console.log('🔄 No services found, initializing default services...');
+      await Service.insertMany(defaultServices);
+      console.log('✅ Default services initialized successfully');
+    } else {
+      console.log(`✅ Found ${existingServices.length} existing services`);
+    }
   } catch (error) {
-    console.error('Error seeding services:', error);
-    process.exit(1);
+    console.error('❌ Error initializing services:', error.message);
   }
 };
 
-seedServices();
+module.exports = { initializeServices };

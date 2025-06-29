@@ -6,9 +6,13 @@ dotenv.config();
 // Import dependencies
 const app = require('./src/app');
 const { connectDB } = require('./src/config/database');
+const { initializeServices } = require('./src/utils/initializeServices');
 
-// Connect to database
-connectDB();
+// Connect to database and initialize services
+const initializeApp = async () => {
+  await connectDB();
+  await initializeServices();
+};
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
@@ -19,7 +23,8 @@ process.on('uncaughtException', (err) => {
 
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
+  await initializeApp();
   console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
   console.log(`📱 API available at: http://localhost:${PORT}`);
   console.log(`🩺 Health check: http://localhost:${PORT}/health`);
